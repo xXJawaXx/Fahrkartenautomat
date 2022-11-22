@@ -14,7 +14,7 @@ class Fahrkartenautomat {
         double eingeworfeneMuenze;
         int anzTickets;
 
-        // 1    Geldbetrag eingeben
+        // Geldbetrag eingeben
         System.out.print("Ticketpreis(Euro): ");
         zuZahlenderBetrag = tastatur.nextDouble();
         if(zuZahlenderBetrag <= 0){
@@ -32,7 +32,7 @@ class Fahrkartenautomat {
 
         zuZahlenderBetrag *= anzTickets;
 
-        // 2    Geldeinwurf
+        // 2 Geldeinwurf
         eingezahlterGesamtbetrag = 0.0;
         BigDecimal zuZahlen = new BigDecimal(zuZahlenderBetrag);
         while (eingezahlterGesamtbetrag < zuZahlenderBetrag) {
@@ -56,7 +56,7 @@ class Fahrkartenautomat {
 
         BigDecimal gesamt = new BigDecimal(eingezahlterGesamtbetrag);
 
-        // 3    Fahrscheinausgabe
+        // 3 Fahrscheinausgabe
         System.out.println("\nFahrschein wird ausgegeben");
         for (int i = 0; i < 8; i++) {
             System.out.print("=");
@@ -69,7 +69,7 @@ class Fahrkartenautomat {
         }
         System.out.println("\n\n");
 
-        // 4    Rückgeldberechnung und -ausgabe
+        // 4 Rückgeldberechnung und -ausgabe
         BigDecimal rueckgabe = gesamt.subtract(BigDecimal.valueOf(zuZahlenderBetrag));
 
         if (rueckgabe.compareTo(BigDecimal.valueOf(0)) > 0) {
