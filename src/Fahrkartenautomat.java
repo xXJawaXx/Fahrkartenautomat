@@ -5,40 +5,93 @@ import java.util.Scanner;
 class Fahrkartenautomat {
     public static void main(String[] args) {
 
+        // Variablen Deklaration
         double[] Zahlungsmittel = {0.05, 0.1, 0.2, 0.5, 1, 2, 5, 10, 20};
         boolean gueltig = false;
 
         Scanner tastatur = new Scanner(System.in);
 
-        double zuZahlenderBetrag;
+        double zuZahlenderBetrag = 0;
         double eingezahlterGesamtbetrag;
         double eingeworfeneMuenze;
-        int anzTickets;
 
-        // Geldbetrag eingeben
-        System.out.print("Ticketpreis(Euro): ");
-        zuZahlenderBetrag = tastatur.nextDouble();
-        if(zuZahlenderBetrag <= 0){
-            zuZahlenderBetrag = 1;
-            System.out.println("Fehlerhafte Eingabe - Ticketpreis wird auf 1 gesetzt.");
+        int anzTickets;
+        int ticket;
+        double ticketPrice = 0;
+        boolean bezahlen = false;
+
+
+        System.out.println("Fahrkartenbestellvorgang:");
+        System.out.println("=========================\n");
+
+        // Ticketwahl
+        System.out.println("Wählen Sie ihre Wunschkarte für Berlin AB aus:");
+
+        while(!bezahlen){
+            System.out.println("  Kurzstrecke AB [2,00 EUR] (1)");
+            System.out.println("  Einzelfahrschein AB [3,00 EUR] (2)");
+            System.out.println("  Tageskarte AB [8,80 EUR] (3)");
+            System.out.println("  4-Fahrten-Karte AB [9,40 EUR] (4)");
+            System.out.println("  Bezahlen (9)");
+            System.out.println();
+
+            boolean x = true;
+            do{
+                System.out.print("Ihre Wahl: ");
+                ticket = tastatur.nextInt();
+                switch(ticket){
+                    case 1:
+                        ticketPrice = 2.00;
+                        x = false;
+                        break;
+                    case 2:
+                        ticketPrice = 3.00;
+                        x = false;
+                        break;
+                    case 3:
+                        ticketPrice = 8.80;
+                        x = false;
+                        break;
+                    case 4:
+                        ticketPrice = 9.40;
+                        x = false;
+                        break;
+                    case 9:
+                        bezahlen = true;
+                        x = false;
+                        break;
+                    default:
+                        System.out.println("  >> Falsche Eingabe <<");
+                        break;
+                }
+            }while(x);
+
+            // Anzahl Ticket Wahl
+            if(!bezahlen){
+                do{
+                    System.out.print("Anzahl der Tickets: ");
+                    anzTickets = tastatur.nextInt();
+                    if(anzTickets > 10 || anzTickets < 1){
+                        System.out.println(" >> Waehlen Sie bitte eine Anzahl von 1 bis 10 Tickets aus. <<");
+                    }
+                }while (anzTickets > 10 || anzTickets < 1);
+
+                zuZahlenderBetrag += anzTickets * ticketPrice;
+            }
+
+            if(!bezahlen){
+                System.out.printf("\nZwischensumme: %.2f €\n\n", zuZahlenderBetrag);
+            }
         }
 
-        do{
-            System.out.print("Anzahl der Tickets: ");
-            anzTickets = tastatur.nextInt();
-            if(anzTickets > 10 || anzTickets < 1){
-                System.out.println(" >> Waehlen Sie bitte eine Anzahl von 1 bis 10 Tickets aus. <<");
-            }
-        }while (anzTickets > 10 || anzTickets < 1);
-
-        zuZahlenderBetrag *= anzTickets;
-
-        // 2 Geldeinwurf
+        // 2    Geldeinwurf
         eingezahlterGesamtbetrag = 0.0;
         BigDecimal zuZahlen = new BigDecimal(zuZahlenderBetrag);
+
+        System.out.println();
         while (eingezahlterGesamtbetrag < zuZahlenderBetrag) {
             zuZahlen = BigDecimal.valueOf(zuZahlenderBetrag).subtract(BigDecimal.valueOf(eingezahlterGesamtbetrag));
-            System.out.printf("Noch zu zahlen: %.2f Euro\n", zuZahlen);
+            System.out.printf("Noch zu zahlen: %.2f €\n", zuZahlen);
             System.out.print("Eingabe (mind. 5 Cent, hoechstens 20 Euro): ");
             gueltig = false;
             eingeworfeneMuenze = tastatur.nextDouble();
@@ -52,12 +105,11 @@ class Fahrkartenautomat {
             }else{
                 System.out.println(">> Kein gueltiges Zahlungsmittel.");
             }
-
         }
 
         BigDecimal gesamt = new BigDecimal(eingezahlterGesamtbetrag);
 
-        // 3 Fahrscheinausgabe
+        // 3    Fahrscheinausgabe
         System.out.println("\nFahrschein wird ausgegeben");
         for (int i = 0; i < 8; i++) {
             System.out.print("=");
@@ -70,7 +122,7 @@ class Fahrkartenautomat {
         }
         System.out.println("\n\n");
 
-        // 4 Rückgeldberechnung und -ausgabe
+        // 4    Rückgeldberechnung und -ausgabe
         BigDecimal rueckgabe = gesamt.subtract(BigDecimal.valueOf(zuZahlenderBetrag));
         MathContext m = new MathContext(2);
         rueckgabe = rueckgabe.round(m);
